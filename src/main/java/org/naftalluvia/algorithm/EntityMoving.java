@@ -13,14 +13,20 @@ public class EntityMoving {
     private double motionX, motionY, motionZ;
 
     public EntityMoving(Vec3d position, VecSight rotation, Vec3d momentum) {
-        this.posX = position.x();
-        this.posY = position.y();
-        this.posZ = position.z();
-        this.pitch = rotation.pitch();
-        this.yaw = rotation.yaw();
-        this.motionX = momentum.x();
-        this.motionY = momentum.y();
-        this.motionZ = momentum.z();
+        if (position != null) {
+            this.posX = position.x();
+            this.posY = position.y();
+            this.posZ = position.z();
+        }
+        if (rotation != null) {
+            this.pitch = rotation.pitch();
+            this.yaw = rotation.yaw();
+        }
+        if (momentum != null) {
+            this.motionX = momentum.x();
+            this.motionY = momentum.y();
+            this.motionZ = momentum.z();
+        }
     }
 
     public Vec3d getPosition() {
