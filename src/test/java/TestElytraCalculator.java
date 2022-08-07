@@ -1,14 +1,15 @@
+import org.naftalluvia.algorithm.EntityMoving;
 import org.naftalluvia.mathutil.Vec3d;
-import org.naftalluvia.mathutil.Vec3i;
+import org.naftalluvia.mathutil.VecSight;
 
 public class TestElytraCalculator {
 
     public static void main(String[] args) {
         System.out.println("Now loading...");
-        Vec3d posD = new Vec3d(11, 45, 14);
-        Vec3i posI = new Vec3i(16, 256, 65536);
-        Vec3i motion = new Vec3i(8, 64, -512);
-        System.out.printf("%s + %s = %s\n", posI, posD, posD.add(posI.toVec3d()));
-        System.out.printf("%s + %s = %s\n", posI, motion, posI.add(motion));
+        EntityMoving point = new EntityMoving(new Vec3d(0.0, 0.0, 0.0), new VecSight(0.0F, 0.0F), new Vec3d(0.0, 0.0, 0.0));
+        for (int i = 0; i < 1200; i++) {
+            point.update();
+            System.out.printf("tick %4d: %s, %s\n", i, point.getPosition(), point.getMomentum());
+        }
     }
 }
