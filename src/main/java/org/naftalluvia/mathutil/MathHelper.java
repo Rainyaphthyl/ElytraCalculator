@@ -22,4 +22,11 @@ public class MathHelper {
     public static float sqrt(double squared) {
         return (float) Math.sqrt(squared);
     }
+
+    public static double roundTo(double value, int depth) {
+        double rate = Math.pow(10, depth);
+        value *= rate;
+        long product = Math.round(value);
+        return (double) product / rate;
+    }
 }
