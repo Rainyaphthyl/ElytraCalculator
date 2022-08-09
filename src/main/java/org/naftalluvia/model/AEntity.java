@@ -20,7 +20,5 @@ public abstract class AEntity {
         System.out.printf("Fireworks stop. %s\n", this);
     }
 
-    public void onUpdate() {
-
-    }
+    public abstract void onUpdate();
 }
