@@ -9,17 +9,16 @@ public class TestWorldTick {
     public static void main(String[] args) {
         System.out.println("Now loading...");
         World worldLab = new World();
-        EntityPlayer point = new EntityPlayer(
+        EntityPlayer pointPlayer = new EntityPlayer(
                 worldLab, new Vec3d(0.0, 0.0, 0.0),
-                new VecSight(0.0F, -90.0F),
-                new Vec3d(0.0, -6.086 / 20.0, 0.0)
+                new VecSight(75.0F, -90.0F),
+                new Vec3d(0.0, 0.0, 0.0)
         );
-        for (int i = 0; i < 6000; i++) {
-            if (i % 300 == 0) {
-                System.out.printf("sec %4d: ", i / 20);
-                printlnPlayer(point);
-            }
-            point.onUpdate();
+        pointPlayer.launchFirework(1);
+        for (int i = 0; i < 100; i++) {
+            System.out.printf("tick %4d: ", i);
+            printlnPlayer(pointPlayer);
+            worldLab.tick();
         }
     }
 

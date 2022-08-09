@@ -17,6 +17,7 @@ public abstract class AEntity {
 
     public void setDying() {
         this.dying = true;
+        System.out.printf("Fireworks stop. %s\n", this);
     }
 
     public void onUpdate() {

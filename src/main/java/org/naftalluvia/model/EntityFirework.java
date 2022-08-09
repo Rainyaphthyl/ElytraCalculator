@@ -23,6 +23,7 @@ public class EntityFirework extends AEntity {
         this.motionY = 0.05;
         this.lifeTime = 10 * (level + 1) + random.nextInt(6) + random.nextInt(7);
         this.age = 0;
+        System.out.printf("Firework! lifetime = %d ticks. %s\n", this.lifeTime, this);
     }
 
     public void onUpdate() {

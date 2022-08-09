@@ -26,6 +26,7 @@ public class EntityPlayer extends AEntity {
             this.motionY = momentum.y();
             this.motionZ = momentum.z();
         }
+        world.addPlayer(this);
     }
 
     public Vec3d getPosition() {
@@ -87,7 +88,6 @@ public class EntityPlayer extends AEntity {
     }
 
     public void launchFirework(int level) {
-        System.out.println("Firework!");
         this.world.addEntity(new EntityFirework(this.world, this.getPosition(), level, this));
     }
 

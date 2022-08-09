@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public class World {
     private final LinkedList<AEntity> listEntities = new LinkedList<>();
+    private final LinkedList<EntityPlayer> listPlayers = new LinkedList<>();
 
     public World() {
         System.out.println("Create World: " + this);
@@ -12,10 +13,19 @@ public class World {
 
     public void tick() {
         this.updateEntities();
+        this.updatePlayers();
     }
 
-    public void addEntity(AEntity entity){
-        this.listEntities.add(entity);
+    public void addEntity(AEntity entity) {
+        if (entity != null && !(entity instanceof EntityPlayer)) {
+            this.listEntities.add(entity);
+        }
+    }
+
+    public void addPlayer(EntityPlayer player) {
+        if (player != null) {
+            this.listPlayers.add(player);
+        }
     }
 
     public void updateEntities() {
@@ -26,6 +36,19 @@ public class World {
                     iterator.remove();
                 } else {
                     entity.onUpdate();
+                }
+            }
+        }
+    }
+
+    public void updatePlayers() {
+        for (Iterator<EntityPlayer> iterator = this.listPlayers.iterator(); iterator.hasNext(); ) {
+            EntityPlayer player = iterator.next();
+            if (player != null) {
+                if (player.isDying()) {
+                    iterator.remove();
+                } else {
+                    player.onUpdate();
                 }
             }
         }
