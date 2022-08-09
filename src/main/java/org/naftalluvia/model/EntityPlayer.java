@@ -1,18 +1,17 @@
-package org.naftalluvia.algorithm;
+package org.naftalluvia.model;
 
 import org.naftalluvia.mathutil.MathHelper;
 import org.naftalluvia.mathutil.Vec3d;
 import org.naftalluvia.mathutil.VecSight;
 
-public class EntityMoving {
+public class EntityPlayer extends AEntity {
     private static final double GRAVITY = 0.08;
     private static final double RESISTANCE_HORIZON = 0.9900000095367432;
     private static final double RESISTANCE_VERTICAL = 0.9800000190734863;
-    private double posX, posY, posZ;
     private float pitch, yaw;
-    private double motionX, motionY, motionZ;
 
-    public EntityMoving(Vec3d position, VecSight rotation, Vec3d momentum) {
+    public EntityPlayer(World world, Vec3d position, VecSight rotation, Vec3d momentum) {
+        super(world);
         if (position != null) {
             this.posX = position.x();
             this.posY = position.y();
@@ -41,7 +40,7 @@ public class EntityMoving {
         return new Vec3d(this.motionX, this.motionY, this.motionZ);
     }
 
-    public void moveOneTick() {
+    public void elytraGlide() {
         Vec3d vecSight = this.getVecSight();
         float pitchRad = this.pitch * MathHelper.PI_DIV_DEG;
         double sightHorizon = Math.sqrt(vecSight.x() * vecSight.x() + vecSight.z() * vecSight.z());
@@ -87,7 +86,12 @@ public class EntityMoving {
 
     }
 
-    public void update() {
+    public void launchFirework(int level) {
+        System.out.println("Firework!");
+        this.world.addEntity(new EntityFirework(this.world, this.getPosition(), level, this));
+    }
+
+    public void onUpdate() {
         if (Math.abs(this.motionX) < 0.003) {
             this.motionX = 0.0;
         }
@@ -97,6 +101,6 @@ public class EntityMoving {
         if (Math.abs(this.motionZ) < 0.003) {
             this.motionZ = 0.0;
         }
-        this.moveOneTick();
+        this.elytraGlide();
     }
 }
