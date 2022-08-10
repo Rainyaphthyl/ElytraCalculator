@@ -11,13 +11,16 @@ public class TestWorldTick {
         World worldLab = new World();
         EntityPlayer pointPlayer = new EntityPlayer(
                 worldLab, new Vec3d(0.0, 0.0, 0.0),
-                new VecSight(75.0F, -90.0F),
+                new VecSight(45.0F, -90.0F),
                 new Vec3d(0.0, 0.0, 0.0)
         );
-        pointPlayer.launchFirework(1);
-        for (int i = 0; i < 100; i++) {
-            System.out.printf("tick %4d: ", i);
-            printlnPlayer(pointPlayer);
+        worldLab.spawnEntity(pointPlayer);
+        pointPlayer.launchFirework(3);
+        for (int i = 0; i <= 1200; i++) {
+            if (i % 20 == 0) {
+                System.out.printf("tick %4d: ", i / 20);
+                printlnPlayer(pointPlayer);
+            }
             worldLab.tick();
         }
     }

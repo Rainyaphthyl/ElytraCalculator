@@ -5,10 +5,12 @@ public abstract class AEntity {
     protected double posX, posY, posZ;
     protected double motionX, motionY, motionZ;
     private boolean dying;
+    private boolean spawned;
 
     public AEntity(World world) {
         this.world = world;
         this.dying = false;
+        this.spawned = false;
     }
 
     public boolean isDying() {
@@ -21,4 +23,12 @@ public abstract class AEntity {
     }
 
     public abstract void onUpdate();
+
+    public boolean isSpawned() {
+        return this.spawned;
+    }
+
+    public void setSpawned() {
+        this.spawned = true;
+    }
 }

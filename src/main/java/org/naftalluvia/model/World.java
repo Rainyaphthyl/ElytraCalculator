@@ -16,25 +16,23 @@ public class World {
         this.updatePlayers();
     }
 
-    public void addEntity(AEntity entity) {
-        if (entity != null && !(entity instanceof EntityPlayer)) {
+    public void spawnEntity(AEntity entity) {
+        if (entity != null) {
             this.listEntities.add(entity);
-        }
-    }
-
-    public void addPlayer(EntityPlayer player) {
-        if (player != null) {
-            this.listPlayers.add(player);
+            if (entity instanceof EntityPlayer) {
+                this.listPlayers.add((EntityPlayer) entity);
+            }
+            entity.setSpawned();
         }
     }
 
     public void updateEntities() {
         for (Iterator<AEntity> iterator = this.listEntities.iterator(); iterator.hasNext(); ) {
             AEntity entity = iterator.next();
-            if (entity != null && !(entity instanceof EntityPlayer)) {
+            if (entity != null && entity.isSpawned()) {
                 if (entity.isDying()) {
                     iterator.remove();
-                } else {
+                } else if (!(entity instanceof EntityPlayer)) {
                     entity.onUpdate();
                 }
             }
@@ -44,7 +42,7 @@ public class World {
     public void updatePlayers() {
         for (Iterator<EntityPlayer> iterator = this.listPlayers.iterator(); iterator.hasNext(); ) {
             EntityPlayer player = iterator.next();
-            if (player != null) {
+            if (player != null && player.isSpawned()) {
                 if (player.isDying()) {
                     iterator.remove();
                 } else {
