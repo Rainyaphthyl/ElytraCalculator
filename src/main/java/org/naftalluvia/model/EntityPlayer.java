@@ -28,8 +28,16 @@ public class EntityPlayer extends AEntity {
         }
     }
 
+    public BundleParameters getParameters() {
+        return new BundleParameters(this.getPosition(), this.getMomentum(), this.getRotation());
+    }
+
     public Vec3d getPosition() {
         return new Vec3d(this.posX, this.posY, this.posZ);
+    }
+
+    public VecSight getRotation() {
+        return new VecSight(this.pitch, this.yaw);
     }
 
     public Vec3d getVecSight() {

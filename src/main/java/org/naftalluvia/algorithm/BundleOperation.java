@@ -7,12 +7,9 @@ package org.naftalluvia.algorithm;
  *     <li>adjusting pitch & yaw;</li>
  * </ul>
  * <p>Disable fireworks by switching firework level to -1.</p>
- * <p>The adjustment of pitch & yaw shall be "continuous".</p>
+ * <p>The adjustment of pitch & yaw should be "continuous".</p>
  */
 public record BundleOperation(int levelFireworks, float incrementPitch, float incrementYaw) {
-    public static BundleOperation NULL_OPERATION = new BundleOperation();
+    public static BundleOperation OPERATION_AFK = new BundleOperation(-1, 0.0F, 0.0F);
 
-    public BundleOperation() {
-        this(-1, 0.0F, 0.0F);
-    }
 }
