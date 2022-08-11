@@ -1,4 +1,6 @@
-package org.naftalluvia.algorithm;
+package org.naftalluvia.algorithm.operationtrail;
+
+import org.naftalluvia.algorithm.BundleOperation;
 
 /**
  * An abstract trail of operations during a sequence of ticks, including firework usage and aim direction adjustment.
