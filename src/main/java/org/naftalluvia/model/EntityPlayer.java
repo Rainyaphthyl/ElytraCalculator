@@ -28,16 +28,34 @@ public class EntityPlayer extends AEntity {
         }
     }
 
-    public BundleParameters getParameters() {
-        return new BundleParameters(this.getPosition(), this.getMomentum(), this.getRotation());
+    public EntityPlayer(World world, BundleMovement bundleMovement, VecSight rotation) {
+        super(world);
+        if (bundleMovement != null) {
+            Vec3d position = bundleMovement.position();
+            Vec3d momentum = bundleMovement.momentum();
+            if (position != null) {
+                this.posX = position.x();
+                this.posY = position.y();
+                this.posZ = position.z();
+            }
+            if (momentum != null) {
+                this.motionX = momentum.x();
+                this.motionY = momentum.y();
+                this.motionZ = momentum.z();
+            }
+        }
+        if (rotation != null) {
+            this.pitch = rotation.pitch();
+            this.yaw = rotation.yaw();
+        }
+    }
+
+    public BundleMovement getBundleMovement() {
+        return new BundleMovement(this.getPosition(), this.getMomentum());
     }
 
     public Vec3d getPosition() {
         return new Vec3d(this.posX, this.posY, this.posZ);
-    }
-
-    public VecSight getRotation() {
-        return new VecSight(this.pitch, this.yaw);
     }
 
     public Vec3d getVecSight() {

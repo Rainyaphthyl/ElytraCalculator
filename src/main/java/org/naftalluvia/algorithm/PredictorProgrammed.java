@@ -1,7 +1,7 @@
 package org.naftalluvia.algorithm;
 
 import org.naftalluvia.algorithm.instruction.AInstruction;
-import org.naftalluvia.model.BundleParameters;
+import org.naftalluvia.model.BundleMovement;
 import org.naftalluvia.model.EntityPlayer;
 import org.naftalluvia.model.World;
 
@@ -10,17 +10,40 @@ import org.naftalluvia.model.World;
  */
 public class PredictorProgrammed {
     private final AInstruction instruction;
-    private final World worldTest = new World();
+    private BundleMovement movementInitial;
 
-    public PredictorProgrammed(AInstruction instruction) {
+    public PredictorProgrammed(AInstruction instruction, BundleMovement movementInitial) {
         System.out.printf("Instruction %s\n\t in Predictor %s\n", instruction, this);
         this.instruction = instruction;
+        if (this.instruction != null) {
+            System.out.println("Initializing world for simulation...");
+            this.movementInitial = movementInitial;
+        }
     }
 
-    public void initialize(BundleParameters bundleParameters) {
-        if (this.instruction != null && bundleParameters != null) {
-            System.out.println("Initializing world for simulation...");
-            EntityPlayer player = new EntityPlayer(this.worldTest, bundleParameters.position(), bundleParameters.rotation(), bundleParameters.momentum());
+    public static BundleMovement predictFinalState(AInstruction program, BundleMovement initial) {
+        PredictorProgrammed predictor = new PredictorProgrammed(program, initial);
+        return predictor.getStateFinal();
+    }
+
+    public boolean isInitialized() {
+        return this.instruction != null && this.movementInitial != null;
+    }
+
+    public BundleMovement getStateFinal() {
+        if (!this.isInitialized()) {
+            return null;
         }
+        World world = new World();
+        EntityPlayer player = new EntityPlayer(world, this.movementInitial, this.instruction.getRotationInit());
+        world.spawnEntity(player);
+        for (BundleOperation operation = this.instruction.next(); operation != null; operation = this.instruction.next()) {
+            world.tick();
+        }
+        return player.getBundleMovement();
+    }
+
+    public BundleMovement getStateAfter(int ticks) {
+        return null;
     }
 }
