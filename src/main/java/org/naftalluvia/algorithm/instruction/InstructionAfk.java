@@ -3,6 +3,8 @@ package org.naftalluvia.algorithm.instruction;
 import org.naftalluvia.algorithm.BundleOperation;
 import org.naftalluvia.mathutil.VecSight;
 
+import java.util.Objects;
+
 /**
  * Instruction of "No Operations" in finite ticks.
  */
@@ -35,5 +37,18 @@ public class InstructionAfk extends AInstruction {
     @Override
     public boolean hasNext() {
         return this.ticksCountdown > 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof InstructionAfk) {
+            if (obj == this) {
+                return true;
+            } else {
+                return ((InstructionAfk) obj).ticksCountdown == this.ticksCountdown && Objects.equals(((InstructionAfk) obj).getRotationInit(), this.getRotationInit());
+            }
+        } else {
+            return false;
+        }
     }
 }
