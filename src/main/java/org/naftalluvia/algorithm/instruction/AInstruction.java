@@ -4,12 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.naftalluvia.algorithm.BundleOperation;
 import org.naftalluvia.mathutil.VecSight;
 
-import java.util.Objects;
-
 /**
  * An abstract trail of operations during a sequence of ticks (either time limited or infinite), including firework usage and aim direction adjustment.
  */
 public abstract class AInstruction implements Comparable<AInstruction> {
+
     public abstract VecSight getRotationInit();
 
     /**
@@ -49,6 +48,6 @@ public abstract class AInstruction implements Comparable<AInstruction> {
 
     @Override
     public int compareTo(@NotNull AInstruction o) {
-        return Objects.equals(this, o) ? 0 : 1;
+        return this.equals(o) ? 0 : 1;
     }
 }

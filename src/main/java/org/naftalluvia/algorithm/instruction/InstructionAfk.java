@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Instruction of "No Operations" in finite ticks.
  */
-public class InstructionAfk extends AInstruction {
+public class InstructionAfk extends AFiniteInstruction {
     private final float initPitch;
     private final float initYaw;
     private int ticksCountdown;
@@ -45,8 +45,10 @@ public class InstructionAfk extends AInstruction {
             if (obj == this) {
                 return true;
             } else {
-                return ((InstructionAfk) obj).ticksCountdown == this.ticksCountdown && Objects.equals(((InstructionAfk) obj).getRotationInit(), this.getRotationInit());
+                return (this.ticksCountdown == ((InstructionAfk) obj).ticksCountdown && Objects.equals(this.getRotationInit(), ((InstructionAfk) obj).getRotationInit()));
             }
+        } else if (obj instanceof AFiniteInstruction) {
+            return this.isEquivalentTo((AFiniteInstruction) obj);
         } else {
             return false;
         }

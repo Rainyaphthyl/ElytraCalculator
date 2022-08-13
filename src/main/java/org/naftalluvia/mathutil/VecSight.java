@@ -3,8 +3,6 @@ package org.naftalluvia.mathutil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public record VecSight(float pitch, float yaw) {
     @Contract(" -> new")
     public @NotNull Vec3d toVec3d() {
@@ -16,13 +14,9 @@ public record VecSight(float pitch, float yaw) {
         if (obj instanceof VecSight) {
             if (obj == this) {
                 return true;
-            } else if (this.pitch == ((VecSight) obj).pitch && this.yaw == ((VecSight) obj).yaw) {
-                return true;
             } else {
-                return Objects.equals(this.toVec3d(), ((VecSight) obj).toVec3d());
+                return Float.compare(this.pitch, ((VecSight) obj).pitch) == 0 && Float.compare(this.yaw, ((VecSight) obj).yaw) == 0;
             }
-        } else if (obj instanceof Vec3d) {
-            return Objects.equals(this.toVec3d(), obj);
         } else {
             return false;
         }
