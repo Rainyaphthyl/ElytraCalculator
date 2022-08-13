@@ -9,7 +9,7 @@ public abstract class AFiniteInstruction extends AInstruction {
      * Returns {@code true} if {@code instruction} generates the same operations with {@code this}.
      */
     public boolean isEquivalentTo(AFiniteInstruction instruction) {
-        boolean equivalent = instruction != null && this.getRotationInit().equals(instruction.getRotationInit());
+        boolean equivalent = instruction != null && Objects.equals(this.getRotationInit().pitch(), instruction.getRotationInit().pitch());
         if (equivalent) {
             BundleOperation opHere = this.next();
             BundleOperation opInst = instruction.next();

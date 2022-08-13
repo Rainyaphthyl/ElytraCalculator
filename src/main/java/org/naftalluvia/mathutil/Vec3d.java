@@ -4,12 +4,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public record Vec3d(double x, double y, double z) {
-    public Vec3d(double x, double y, double z) {
-        this.x = x == -0.0 ? 0.0 : x;
-        this.y = y == -0.0 ? 0.0 : y;
-        this.z = z == -0.0 ? 0.0 : z;
-    }
-
     @Contract("_, _ -> new")
     public static @NotNull Vec3d normalFromPitchYaw(float pitch, float yaw) {
         float[] v = new float[4];

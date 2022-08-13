@@ -7,6 +7,7 @@ import org.naftalluvia.model.BundleMovement;
 import org.naftalluvia.model.EntityPlayer;
 import org.naftalluvia.model.World;
 
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -15,20 +16,14 @@ import java.util.TreeMap;
  */
 public class PredictorProgrammed {
     private static final TreeMap<BundleMovement, TreeMap<AInstruction, PredictorProgrammed>> CACHE_MAP_INSTANCES = new TreeMap<>();
-
-    private final TreeMap<Integer, EntityPlayer> cacheMapPlayers = new TreeMap<>();
+    private final HashMap<Integer, BundleMovement> cacheMapTicksParameters = new HashMap<>();
     private final AInstruction instruction;
     private final BundleMovement movementInitial;
 
     private PredictorProgrammed(AInstruction instruction, BundleMovement movementInitial) {
         System.out.printf("Instruction %s\n\t in Predictor %s\n", instruction, this);
         this.instruction = instruction;
-        if (this.instruction != null) {
-            System.out.println("Initializing world for simulation...");
-            this.movementInitial = movementInitial;
-        } else {
-            this.movementInitial = null;
-        }
+        this.movementInitial = this.instruction == null ? null : movementInitial;
     }
 
     @Contract("_, _ -> new")
@@ -47,7 +42,7 @@ public class PredictorProgrammed {
             if (this == obj) {
                 return true;
             } else {
-                return Objects.equals(((PredictorProgrammed) obj).instruction, this.instruction) && Objects.equals(((PredictorProgrammed) obj).movementInitial, this.movementInitial);
+                return Objects.equals(this.instruction, ((PredictorProgrammed) obj).instruction) && Objects.equals(this.movementInitial, ((PredictorProgrammed) obj).movementInitial);
             }
         } else {
             return false;
