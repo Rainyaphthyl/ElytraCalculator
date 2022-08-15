@@ -8,6 +8,11 @@ import org.naftalluvia.mathutil.VecSight;
  * An abstract trail of operations during a sequence of ticks (either time limited or infinite), including firework usage and aim direction adjustment.
  */
 public abstract class AInstruction implements Comparable<AInstruction> {
+    /**
+     * The return value should vary on the instruction iterator moving.
+     *
+     * @return The initial pitch and yaw in the instruction.
+     */
     public abstract VecSight getRotationInit();
 
     /**
@@ -19,7 +24,7 @@ public abstract class AInstruction implements Comparable<AInstruction> {
     public abstract BundleOperation getNext();
 
     /**
-     * Moves the iterator to the next tick.
+     * Moves the iterator to the next tick. The initial rotation shall also be changed.
      */
     public abstract void prepareNext();
 
@@ -41,6 +46,13 @@ public abstract class AInstruction implements Comparable<AInstruction> {
         }
         return operation;
     }
+
+    /**
+     * Switch to the «historical version» of the instruction at the certain tick.
+     *
+     * @param orderTick The serial number of the tick to switch.
+     */
+    public abstract void jumpToTick(int orderTick);
 
     @Override
     public abstract boolean equals(Object obj);

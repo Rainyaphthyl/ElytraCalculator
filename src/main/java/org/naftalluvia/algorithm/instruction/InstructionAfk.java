@@ -11,12 +11,14 @@ import java.util.Objects;
 public class InstructionAfk extends AFiniteInstruction {
     private final float initPitch;
     private final float initYaw;
-    private int ticksCountdown;
+    private final int limitTicks;
+    private int currTicks;
 
     public InstructionAfk(float initPitch, float initYaw, int limitTicks) {
         this.initPitch = initPitch;
         this.initYaw = initYaw;
-        this.ticksCountdown = limitTicks;
+        this.limitTicks = limitTicks;
+        this.currTicks = 0;
     }
 
     @Override
@@ -31,12 +33,17 @@ public class InstructionAfk extends AFiniteInstruction {
 
     @Override
     public void prepareNext() {
-        --this.ticksCountdown;
+        ++this.currTicks;
     }
 
     @Override
     public boolean hasNext() {
-        return this.ticksCountdown > 0;
+        return this.currTicks < this.limitTicks;
+    }
+
+    @Override
+    public void jumpToTick(int orderTick) {
+        this.currTicks = orderTick;
     }
 
     @Override
@@ -45,7 +52,7 @@ public class InstructionAfk extends AFiniteInstruction {
             if (obj == this) {
                 return true;
             } else {
-                return (this.ticksCountdown == ((InstructionAfk) obj).ticksCountdown && Objects.equals(this.getRotationInit(), ((InstructionAfk) obj).getRotationInit()));
+                return (this.limitTicks == ((InstructionAfk) obj).limitTicks && Objects.equals(this.getRotationInit(), ((InstructionAfk) obj).getRotationInit()));
             }
         } else if (obj instanceof AFiniteInstruction) {
             return this.isEquivalentTo((AFiniteInstruction) obj);
