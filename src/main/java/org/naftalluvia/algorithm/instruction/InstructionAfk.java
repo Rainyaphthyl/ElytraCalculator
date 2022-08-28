@@ -47,6 +47,11 @@ public class InstructionAfk extends AFiniteInstruction {
     }
 
     @Override
+    public int getCurrentTick() {
+        return this.currTicks;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof InstructionAfk) {
             if (obj == this) {

@@ -54,6 +54,8 @@ public abstract class AInstruction implements Comparable<AInstruction> {
      */
     public abstract void jumpToTick(int orderTick);
 
+    public abstract int getCurrentTick();
+
     @Override
     public abstract boolean equals(Object obj);
 
