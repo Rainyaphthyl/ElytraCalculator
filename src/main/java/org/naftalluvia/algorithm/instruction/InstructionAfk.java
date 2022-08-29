@@ -11,14 +11,11 @@ import java.util.Objects;
 public class InstructionAfk extends AFiniteInstruction {
     private final float initPitch;
     private final float initYaw;
-    private final int limitTicks;
-    private int currTicks;
 
     public InstructionAfk(float initPitch, float initYaw, int limitTicks) {
+        super(limitTicks);
         this.initPitch = initPitch;
         this.initYaw = initYaw;
-        this.limitTicks = limitTicks;
-        this.currTicks = 0;
     }
 
     @Override
@@ -38,27 +35,17 @@ public class InstructionAfk extends AFiniteInstruction {
 
     @Override
     public void prepareNext() {
-        ++this.currTicks;
+        this.prepareTickNext();
     }
 
     @Override
     public boolean hasNext() {
-        return this.limitTicks < 0 || this.currTicks < this.limitTicks;
+        return this.getTickCurrent() < this.limitTicks;
     }
 
     @Override
     public void jumpToTick(int orderTick) {
-        this.currTicks = orderTick;
-    }
-
-    @Override
-    public int getTickCurrent() {
-        return this.currTicks;
-    }
-
-    @Override
-    public int getLimitTicks() {
-        return this.limitTicks;
+        this.setTickCurrent(orderTick);
     }
 
     @Override
@@ -67,9 +54,7 @@ public class InstructionAfk extends AFiniteInstruction {
             if (obj == this) {
                 return true;
             } else {
-                InstructionAfk objInst = (InstructionAfk) obj;
-                return (this.limitTicks == objInst.limitTicks || (this.limitTicks < 0 && objInst.limitTicks < 0))
-                        && Objects.equals(this.getRotationInit(), objInst.getRotationInit());
+                return this.limitTicks == ((InstructionAfk) obj).limitTicks && Objects.equals(this.getRotationInit(), ((InstructionAfk) obj).getRotationInit());
             }
         } else if (obj instanceof AFiniteInstruction) {
             return this.isEquivalentTo((AFiniteInstruction) obj);

@@ -8,6 +8,12 @@ import org.naftalluvia.mathutil.VecSight;
  * An abstract trail of operations during a sequence of ticks (either time limited or infinite), including firework usage and aim direction adjustment.
  */
 public abstract class AInstruction implements Comparable<AInstruction> {
+    private int currTicks;
+
+    protected AInstruction() {
+        this.currTicks = 0;
+    }
+
     /**
      * The return value should NOT vary while the instruction iterator moves.
      *
@@ -33,7 +39,9 @@ public abstract class AInstruction implements Comparable<AInstruction> {
     /**
      * @return The maximum number of ticks. ({@code -1} for infinite)
      */
-    public abstract int getLimitTicks();
+    public final int getLimitTicks() {
+        return (this instanceof AFiniteInstruction) ? ((AFiniteInstruction) this).limitTicks : -1;
+    }
 
     /**
      * Moves the iterator to the next tick. The initial rotation shall also be changed.
@@ -50,7 +58,7 @@ public abstract class AInstruction implements Comparable<AInstruction> {
      *
      * @return A bundle of scheduled operations during the next tick.
      */
-    public BundleOperation next() {
+    public final BundleOperation next() {
         BundleOperation operation = null;
         if (this.hasNext()) {
             operation = this.getNext();
@@ -66,13 +74,26 @@ public abstract class AInstruction implements Comparable<AInstruction> {
      */
     public abstract void jumpToTick(int orderTick);
 
-    public abstract int getTickCurrent();
+    public final int getTickCurrent() {
+        return this.currTicks;
+    }
+
+    public final void prepareTickNext(){
+        if (this.currTicks < Integer.MAX_VALUE){
+            ++this.currTicks;
+        }
+    }
+
+    public final void setTickCurrent(int ticks)
+    {
+        this.currTicks = Math.max(ticks, 0);
+    }
 
     @Override
     public abstract boolean equals(Object obj);
 
     @Override
-    public int compareTo(@NotNull AInstruction o) {
+    public final int compareTo(@NotNull AInstruction o) {
         return this.equals(o) ? 0 : Integer.compare(this.hashCode(), o.hashCode());
     }
 }
