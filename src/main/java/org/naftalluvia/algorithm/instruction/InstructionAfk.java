@@ -11,19 +11,21 @@ import java.util.Objects;
 public class InstructionAfk extends AFiniteInstruction {
     private final float initPitch;
     private final float initYaw;
-    private final int limitTicks;
-    private int currTicks;
 
     public InstructionAfk(float initPitch, float initYaw, int limitTicks) {
+        super(limitTicks);
         this.initPitch = initPitch;
         this.initYaw = initYaw;
-        this.limitTicks = limitTicks;
-        this.currTicks = 0;
     }
 
     @Override
     public VecSight getRotationInit() {
         return new VecSight(this.initPitch, this.initYaw);
+    }
+
+    @Override
+    public VecSight getRotationCurrent() {
+        return this.getRotationInit();
     }
 
     @Override
@@ -33,17 +35,17 @@ public class InstructionAfk extends AFiniteInstruction {
 
     @Override
     public void prepareNext() {
-        ++this.currTicks;
+        this.prepareTickNext();
     }
 
     @Override
     public boolean hasNext() {
-        return this.currTicks < this.limitTicks;
+        return this.getTickCurrent() < this.limitTicks;
     }
 
     @Override
     public void jumpToTick(int orderTick) {
-        this.currTicks = orderTick;
+        this.setTickCurrent(orderTick);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class InstructionAfk extends AFiniteInstruction {
             if (obj == this) {
                 return true;
             } else {
-                return (this.limitTicks == ((InstructionAfk) obj).limitTicks && Objects.equals(this.getRotationInit(), ((InstructionAfk) obj).getRotationInit()));
+                return this.limitTicks == ((InstructionAfk) obj).limitTicks && Objects.equals(this.getRotationInit(), ((InstructionAfk) obj).getRotationInit());
             }
         } else if (obj instanceof AFiniteInstruction) {
             return this.isEquivalentTo((AFiniteInstruction) obj);
