@@ -9,11 +9,18 @@ import org.naftalluvia.mathutil.VecSight;
  */
 public abstract class AInstruction implements Comparable<AInstruction> {
     /**
-     * The return value should vary on the instruction iterator moving.
+     * The return value should NOT vary while the instruction iterator moves.
      *
      * @return The initial pitch and yaw in the instruction.
      */
     public abstract VecSight getRotationInit();
+
+    /**
+     * The return value should vary on the instruction iterator moving.
+     *
+     * @return The current pitch and yaw in the instruction (BEFORE moving to the next).
+     */
+    public abstract VecSight getRotationCurrent();
 
     /**
      * Gets the next operation WITHOUT moving the iterator forward.
@@ -22,6 +29,11 @@ public abstract class AInstruction implements Comparable<AInstruction> {
      * @return A bundle of scheduled operations during the next tick.
      */
     public abstract BundleOperation getNext();
+
+    /**
+     * @return The maximum number of ticks. ({@code -1} for infinite)
+     */
+    public abstract int getLimitTicks();
 
     /**
      * Moves the iterator to the next tick. The initial rotation shall also be changed.
@@ -54,7 +66,7 @@ public abstract class AInstruction implements Comparable<AInstruction> {
      */
     public abstract void jumpToTick(int orderTick);
 
-    public abstract int getCurrentTick();
+    public abstract int getTickCurrent();
 
     @Override
     public abstract boolean equals(Object obj);

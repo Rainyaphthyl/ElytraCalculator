@@ -27,6 +27,11 @@ public class InstructionAfk extends AFiniteInstruction {
     }
 
     @Override
+    public VecSight getRotationCurrent() {
+        return this.getRotationInit();
+    }
+
+    @Override
     public BundleOperation getNext() {
         return BundleOperation.OPERATION_AFK;
     }
@@ -38,7 +43,7 @@ public class InstructionAfk extends AFiniteInstruction {
 
     @Override
     public boolean hasNext() {
-        return this.currTicks < this.limitTicks;
+        return this.limitTicks < 0 || this.currTicks < this.limitTicks;
     }
 
     @Override
@@ -47,8 +52,13 @@ public class InstructionAfk extends AFiniteInstruction {
     }
 
     @Override
-    public int getCurrentTick() {
+    public int getTickCurrent() {
         return this.currTicks;
+    }
+
+    @Override
+    public int getLimitTicks() {
+        return this.limitTicks;
     }
 
     @Override
@@ -57,7 +67,9 @@ public class InstructionAfk extends AFiniteInstruction {
             if (obj == this) {
                 return true;
             } else {
-                return (this.limitTicks == ((InstructionAfk) obj).limitTicks && Objects.equals(this.getRotationInit(), ((InstructionAfk) obj).getRotationInit()));
+                InstructionAfk objInst = (InstructionAfk) obj;
+                return (this.limitTicks == objInst.limitTicks || (this.limitTicks < 0 && objInst.limitTicks < 0))
+                        && Objects.equals(this.getRotationInit(), objInst.getRotationInit());
             }
         } else if (obj instanceof AFiniteInstruction) {
             return this.isEquivalentTo((AFiniteInstruction) obj);

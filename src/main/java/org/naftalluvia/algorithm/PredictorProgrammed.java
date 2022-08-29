@@ -7,7 +7,7 @@ import org.naftalluvia.model.BundleMovement;
 import org.naftalluvia.model.EntityPlayer;
 import org.naftalluvia.model.World;
 
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -16,7 +16,10 @@ import java.util.TreeMap;
  */
 public class PredictorProgrammed {
     private static final TreeMap<BundleMovement, TreeMap<AInstruction, PredictorProgrammed>> CACHE_MAP_INSTANCES = new TreeMap<>();
-    private final HashMap<Integer, BundleMovement> cacheMapTicksParameters = new HashMap<>();
+    /**
+     * The bundle of movement DURING a certain tick, i.e. AFTER a certain number of ticks. If {@code key = 0}, then {@code value = movementInitial};
+     */
+    private final TreeMap<Integer, BundleMovement> cacheMapTicksParameters = new TreeMap<>();
     private final AInstruction instruction;
     private final BundleMovement movementInitial;
 
@@ -53,7 +56,7 @@ public class PredictorProgrammed {
         return this.instruction != null && this.movementInitial != null;
     }
 
-    public BundleMovement getStateFinal() {
+    public synchronized BundleMovement getStateFinal() {
         if (!this.isInitialized()) {
             return null;
         }
@@ -62,12 +65,29 @@ public class PredictorProgrammed {
         world.spawnEntity(player);
         for (BundleOperation operation = this.instruction.next(); operation != null; operation = this.instruction.next()) {
             world.tick();
+            this.cacheMapTicksParameters.putIfAbsent(this.instruction.getTickCurrent(), player.getBundleMovement());
         }
         return player.getBundleMovement();
     }
 
-    public BundleMovement getStateAfter(int ticks) {
-        return null;
+    public synchronized BundleMovement getStateAfter(final int ticks) {
+        World world = new World();
+        int ticksPossible = 0;
+        Iterator<Integer> iterator = this.cacheMapTicksParameters.keySet().iterator();
+        for (int i = 0; i <= ticks && iterator.hasNext(); i = iterator.next()) {
+            ticksPossible = i;
+        }
+        BundleMovement movementCurrent = ticksPossible == 0 ? this.movementInitial : this.cacheMapTicksParameters.get(ticksPossible);
+        this.instruction.jumpToTick(ticksPossible);
+        EntityPlayer player = new EntityPlayer(world, movementCurrent, this.instruction.getRotationCurrent());
+        world.spawnEntity(player);
+        BundleOperation operation = this.instruction.next();
+        for (int i = ticksPossible; i < ticks && operation != null; ++i) {
+            world.tick();
+            this.cacheMapTicksParameters.putIfAbsent(this.instruction.getTickCurrent(), player.getBundleMovement());
+            operation = this.instruction.next();
+        }
+        return player.getBundleMovement();
     }
 
 }
